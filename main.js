@@ -150,6 +150,11 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         }
     }
     const resetPlayerTurn = () => _playerTurn = 0;
+    const advancePlayerTurn = () => {
+        // if player turn is not on the last player, advance player turn by 1. otherwise loop back to 0.
+        if (_playerTurn < Math.max(0, _players.length) - 1) _playerTurn++;
+        else _playerTurn = 0;
+    };
     
     const printPlayerLog = () => {
         console.log(`Current player turn: ${_playerTurn}`);
@@ -166,9 +171,41 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
     const toggleRunGame = () => _isRun = !_isRun;
 
     // board related functions
-    
+    const isBoardFilled = () => {
+        // returns true if the board has no "falsy" cells.
+        const boardDims = _board.getDimensions();
+        for (let i = 0; i < boardDims.rows; i++) {
+            for (let j = 0; j < boardDims.columns; j++) {
+                if (_board.getPiece(i, j)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
 
-    return {addPlayer, resetPlayerTurn, printPlayerLog, isGameRunning, toggleRunGame, checkRepInv};
+    const placePieceForCurrentPlayerAt = (i, j) => {
+        /* 
+            If given position (i, j) is an empty cell, place a piece of the current player onto it 
+            and advance the turn.
+        */
+        if (!_board.getPiece(i, j) && _players.length > 0){
+            _board.setPiece(i, j, _players[_playerTurn].getPlayerPiece());
+            advancePlayerTurn();
+        }
+    };
+
+    return {
+        addPlayer, 
+        resetPlayerTurn, 
+        advancePlayerTurn,
+        printPlayerLog, 
+        isGameRunning, 
+        toggleRunGame, 
+        isBoardFilled, 
+        placePieceForCurrentPlayerAt,
+        checkRepInv
+    };
 }) (gameBoard, 3);
 
 // TEST SUITE
@@ -215,7 +252,34 @@ gameEngine.addPlayer(playerO);
 gameEngine.printPlayerLog();
 console.log({isGameRunning: gameEngine.isGameRunning()});
 
-console.log("\t## Reset player turn test")
+console.log("\t## Player turn test")
 gameEngine.resetPlayerTurn();
 gameEngine.printPlayerLog();
+
+gameEngine.advancePlayerTurn();
+gameEngine.printPlayerLog();
+
+gameEngine.advancePlayerTurn();
+gameEngine.printPlayerLog();
 gameEngine.checkRepInv();
+
+console.log("isBoardFilled: " + gameEngine.isBoardFilled().toString());
+
+console.log("\n\n\t#######################################\n\t## Test placing pieces with gameEngine");
+
+gameBoard.printBoard();
+moves = [
+    [0,1], // X
+    [0,0], // X
+    [0,0], // O
+    [0,2], // O
+    [1,1], // X
+    [1,2], // O
+    [2,1], // X, wins
+]
+for (move of moves){
+    gameEngine.printPlayerLog();
+    console.log(`Placing piece for current player at ${move[0]},${move[1]}`);
+    gameEngine.placePieceForCurrentPlayerAt(move[0], move[1]);
+    gameBoard.printBoard();
+}

@@ -45,12 +45,15 @@ gameEngine: runs the Tic Tac Toe game
         // player related
         addPlayer // if game is not run, pushes new player to the end of the list of players
         resetPlayerTurn // resets player turn to 0
+        advancePlayerTurn // if player turn is not on the last player, advance player turn by 1. otherwise loop back to 0.
         
         // game status related
         isGameRunning // gets isRun
         toggleRunGame // switches isRun to the opposite value
 
         // board related 
-        placePiece // if given position is an empty cell, place a piece of the current player onto it and advance the turn.
-        checkWin // gets the piece that has enough piecesToWin along a row or column of the board, or null if there's no winner.
+        placePieceForCurrentPlayerAt // if given position is an empty cell, place a piece of the current player onto it and advance the turn.
         isBoardFilled // returns true if the board has no "falsy" cells.
+        checkWin // gets the piece that has enough piecesToWin along a row or column of the board, or null if there's no winner.
+
+Not all of these functions should be exposed to global scope via the factories. I need to clean them up some time before building the UI.
