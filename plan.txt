@@ -1,4 +1,4 @@
-gameBoard:
+gameBoard: stores pieces in the Tic Tac Toe.
 /* 
     Abstraction: (rows) by (columns) game board. 
     Representation Invariant: 
@@ -7,13 +7,41 @@ gameBoard:
     _board, _rows, _columns, _debug
     printBoard, checkRepInv
 
-player:
+player (made from playerFactory): stores data about each player in the game.
 /* 
     Abstraction:
         piece is the piece that the player will place on the board
         name is the player name. "anonymous" if not provided
     Representation Invariant:
-        piece is a string
+        name and piece are strings
+        piece cannot be a "falsy" value.
 */
     _piece, _name
     getName, setName, getPiece, checkRepInv
+
+gameEngine: runs the Tic Tac Toe game
+/*
+    Abstraction: 
+        board refers to the singleton gameBoard
+        players is a list of players in the game
+        playerTurn marks the player turn of the game
+        isRun indicates if the game is running or not.
+            if the game is running, new players cannot be added.
+        piecesToWin: number of pieces in a row or column to win.
+
+    Representation Invariant:
+        playerTurn must be in range [0, number of players - 1], like an array index.
+        isRun is a boolean
+        piecesToWin is a positive integer > 2
+*/
+    _board, _players, _playerTurn, _isRun, _piecesToWin
+
+    addPlayer // if game is not run, pushes new player to the end of the list of players
+    
+    toggleRunGame // switches isRun to the opposite value
+    isGameRunning // gets isRun
+
+    placePiece // if given position is an empty cell, place a piece of the current player onto it and advance the turn.
+    
+    checkWin // gets the piece that has enough piecesToWin along a row or column of the board, or null if there's no winner.
+    isBoardFilled // returns true if the board has no "falsy" cells.

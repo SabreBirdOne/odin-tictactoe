@@ -81,6 +81,12 @@ let playerFactory = function createPlayer (_piece, _name = "anonymous") {
     return {getName, setName, getPiece, checkRepInv};
 }
 
+let gameEngine = (function createGame(_gameBoard) {
+    let _players = [];
+}) (gameBoard);
+
+// TEST SUITE
+
 let playerX = playerFactory("X");
 let playerO = playerFactory("O", "Omega");
 
