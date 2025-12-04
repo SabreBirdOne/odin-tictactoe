@@ -59,18 +59,20 @@ let playerFactory = function createPlayer (_piece, _name = "anonymous") {
     /* 
         Abstraction:
             piece is the piece that the player will place on the board
-            name is the player name
+            name is the player name. "anonymous" if not provided
         Representation Invariant:
             name and piece are strings
+            piece cannot be a "falsy" value.
     */
 
     const checkRepInv = () => {
         // Checks if the representation invariant is held, and prints findings to the console.
         let repInvHeld = true;
         if (!(typeof(_name) === "string" && typeof(_piece) === "string")){
-            console.warn("player name or piece are not instances of strings");
+            console.warn(`player ${_name} with piece ${_piece}. These must be of type string`);
             repInvHeld = false;
         }
+        if (!_piece) console.warn(`player piece (${_piece}). This cannot be a falsy value`);
         if (repInvHeld) console.log("Representation Invariant held");
     }
 
@@ -87,17 +89,11 @@ let gameEngine = (function createGame(_gameBoard) {
 
 // TEST SUITE
 
-let playerX = playerFactory("X");
-let playerO = playerFactory("O", "Omega");
-
 gameBoard.checkRepInv();
 gameBoard.printBoard();
 
-for (player of [playerX, playerO]){
-    player.checkRepInv();
-    console.log(player.getName());
-    console.log(player.getPiece());
-}
+let playerX = playerFactory("X");
+let playerO = playerFactory("O", "Omega");
 
 playerX.setName("Xavier");
 playerO.setName("Olivia");
