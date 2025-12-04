@@ -1,0 +1,18 @@
+gameBoard:
+/* 
+    Abstraction: (rows) by (columns) game board. 
+    Representation Invariant: 
+        board is an Array with correct number of rows and columns
+*/
+    _board, _rows, _columns, _debug
+    printBoard, checkRepInv
+
+player:
+/* 
+    Abstraction:
+        piece is the piece that the player will place on the board
+        name is the player name
+    Representation Invariant:
+        piece is a string
+*/
+    _piece, _name
