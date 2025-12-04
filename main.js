@@ -5,11 +5,9 @@ gameBoard = (function createGameBoard (_rows, _columns) {
         Abstraction: (rows) by (columns) game board. 
         Representation Invariant: 
             board is an Array with correct number of rows and columns
-            each cell on the board must be a valid piece "", "X", or "O"
     */
 
     let _board = [];
-    const _validPieces = ["", "X", "O"];
     const _debug = true;
 
     for (let i = 0; i < _rows; i++){
@@ -31,11 +29,6 @@ gameBoard = (function createGameBoard (_rows, _columns) {
         for(let i = 0; i < _rows; i++){
             if (_board[i].length != _columns) {
                 console.warn(`the board's ${i+1}th row does not match with columns variable`);
-            }
-            for(let j = 0; j < _columns; j++){
-                if (!_validPieces.includes(_board[i][j])) {
-                    console.warn(`the cell at board[${i}][${j}] is not a valid piece: ${_board[i][j]}`)
-                }
             }
         }
         return console.log("Representation Invariant held");
