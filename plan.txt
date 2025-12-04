@@ -36,12 +36,17 @@ gameEngine: runs the Tic Tac Toe game
 */
     _board, _players, _playerTurn, _isRun, _piecesToWin
 
-    addPlayer // if game is not run, pushes new player to the end of the list of players
-    
-    toggleRunGame // switches isRun to the opposite value
-    isGameRunning // gets isRun
+    Functions:
 
-    placePiece // if given position is an empty cell, place a piece of the current player onto it and advance the turn.
-    
-    checkWin // gets the piece that has enough piecesToWin along a row or column of the board, or null if there's no winner.
-    isBoardFilled // returns true if the board has no "falsy" cells.
+        // player related
+        addPlayer // if game is not run, pushes new player to the end of the list of players
+        resetPlayerTurn // resets player turn to 0
+        
+        // game status related
+        isGameRunning // gets isRun
+        toggleRunGame // switches isRun to the opposite value
+
+        // board related 
+        placePiece // if given position is an empty cell, place a piece of the current player onto it and advance the turn.
+        checkWin // gets the piece that has enough piecesToWin along a row or column of the board, or null if there's no winner.
+        isBoardFilled // returns true if the board has no "falsy" cells.
