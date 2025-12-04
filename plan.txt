@@ -11,8 +11,9 @@ player:
 /* 
     Abstraction:
         piece is the piece that the player will place on the board
-        name is the player name
+        name is the player name. "anonymous" if not provided
     Representation Invariant:
         piece is a string
 */
     _piece, _name
+    getName, setName, getPiece, checkRepInv
