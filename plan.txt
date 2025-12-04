@@ -5,7 +5,7 @@ gameBoard: stores pieces in the Tic Tac Toe.
         board is an Array with correct number of rows and columns
 */
     _board, _rows, _columns, _debug
-    printBoard, checkRepInv
+    printBoard, checkRepInv, getDimensions, isInBounds, getPiece, setPiece
 
 player (made from playerFactory): stores data about each player in the game.
 /* 
@@ -17,7 +17,7 @@ player (made from playerFactory): stores data about each player in the game.
         piece cannot be a "falsy" value.
 */
     _piece, _name
-    getName, setName, getPiece, checkRepInv
+    getName, setName, getPlayerPiece, checkRepInv
 
 gameEngine: runs the Tic Tac Toe game
 /*
@@ -37,6 +37,10 @@ gameEngine: runs the Tic Tac Toe game
     _board, _players, _playerTurn, _isRun, _piecesToWin
 
     Functions:
+        
+        checkRepInv // checks Representation Invariant of the game engine.
+
+        Some functions from gameBoard will be called by interface functions in gameEngine.
 
         // player related
         addPlayer // if game is not run, pushes new player to the end of the list of players

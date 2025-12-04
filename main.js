@@ -14,8 +14,7 @@ let gameBoard = (function createGameBoard (_rows, _columns) {
         _board.push([]);
         for (let j = 0; j < _columns; j++){
             _board[i].push("");
-        }
-        
+        }  
     }
 
     const checkRepInv = () => {
@@ -37,12 +36,12 @@ let gameBoard = (function createGameBoard (_rows, _columns) {
         }
         
         if (repInvHeld) console.log("Representation Invariant held");
-    }
+    };
 
     const printBoard = () => {
         // Prints the board to the console
         for(let i = 0; i < _rows; i++){
-            let rowStr = ""
+            let rowStr = "";
             for(let j = 0; j < _columns; j++){
                 rowStr += _board[i][j];
                 if (_debug) rowStr += ` (${i},${j})`;
@@ -50,9 +49,31 @@ let gameBoard = (function createGameBoard (_rows, _columns) {
             }
             console.log(rowStr + "\n");
         }
+    };
+
+    const getDimensions = () => {
+        return {rows: _rows, columns: _columns};
+    };
+
+    const isInBounds = (i, j) => {
+        // returns true if i and j are indices within rows and columns (start from 0)
+        const inBounds = (0 <= i && i < _rows) && (0 <= j && j < _columns);
+        if (!inBounds) console.warn(`${i}, ${j} are not in bounds of dimensions ${_rows} rows x ${_columns} columns`)
+        return inBounds;
     }
 
-    return {printBoard, checkRepInv};
+    const getPiece = (i, j) => {
+        // returns the piece string at the i-th row and j-th column (start from 0)
+        if (isInBounds(i,j)) return _board[i][j].slice(0);
+        else return "";
+    }
+
+    const setPiece = (i, j, newPiece) => {
+        // if i and j are in the boundaries of the board, place the new piece at board[i][j]
+        if (isInBounds(i,j)) _board[i][j] = newPiece.slice(0);
+    }
+
+    return {printBoard, getDimensions, isInBounds, getPiece, setPiece, checkRepInv};
 })(3, 3);
 
 let playerFactory = function createPlayer (_piece, _name = "anonymous") {
@@ -78,9 +99,9 @@ let playerFactory = function createPlayer (_piece, _name = "anonymous") {
 
     const getName = () => _name.slice(0);
     const setName = (newName) => _name = newName;
-    const getPiece = () => _piece.slice(0);
+    const getPlayerPiece = () => _piece.slice(0);
 
-    return {getName, setName, getPiece, checkRepInv};
+    return {getName, setName, getPlayerPiece, checkRepInv};
 }
 
 let gameEngine = (function createGame(_board, _piecesToWin) {
@@ -134,7 +155,7 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         console.log(`Current player turn: ${_playerTurn}`);
         console.log("Players:");
         for(let i = 0; i < _players.length; i++){
-            let logStr = "\t" + `${_players[i].getName()} (piece: ${_players[i].getPiece()})`;
+            let logStr = "\t" + `${_players[i].getName()} (piece: ${_players[i].getPlayerPiece()})`;
             if (i === _playerTurn) logStr += ' (current turn)';
             console.log(logStr);        
         }
@@ -151,10 +172,26 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
 }) (gameBoard, 3);
 
 // TEST SUITE
-console.log({isGameRunning: gameEngine.isGameRunning()});
+
+console.log("\t## Testing gameBoard: getDimensions, getPiece, setPiece")
 gameBoard.checkRepInv();
 gameBoard.printBoard();
+console.log(gameBoard.getDimensions());
 
+let x = 0, y = 5;
+console.log(`Piece at location ${x}, ${y}: ${gameBoard.getPiece(x,y)}`)
+
+x = 0, y = 1;
+console.log(`Piece at location ${x}, ${y}: ${gameBoard.getPiece(x,y)}`)
+
+let newP = "X";
+console.log(`Set new piece ${newP} at ${x}, ${y}`);
+gameBoard.setPiece(x, y, newP);
+
+console.log(`Piece at location ${x}, ${y}: ${gameBoard.getPiece(x,y)}`)
+gameBoard.printBoard();
+
+console.log("\t## Testing playerFactory");
 let playerX = playerFactory("X");
 let playerO = playerFactory("O", "Omega");
 
