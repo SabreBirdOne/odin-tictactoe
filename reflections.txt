@@ -1,0 +1,10 @@
+ABOUT OVER EXPOSING gameEngine
+
+When developing the gameEngine module, I can't help but wonder if there are too many public functions.
+Some of the functions do not need to be exposed beyond the modules, but only to use internally.
+
+They were made public since I'm testing with console log. I never considered setting up a testing 
+suite via NodeJS. 
+
+At least no data is exposed directly (if you don't count returns that might not be deep copies). 
+The only thing exposed are functions.
