@@ -1,6 +1,6 @@
 // alert("main.js linked");
 
-let LOGGING = true;
+let LOGGING = false;
 
 let gameBoard = (function createGameBoard (_rows, _columns) {
     /* 
@@ -132,6 +132,8 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
                 if the game is running, new players cannot be added.
             piecesToWin: number of pieces in a row or column to win.
 
+            to restart game, gameBoard.wipeBoard and gameEngine.resetPlayerTurn
+
         Representation Invariant:
             playerTurn must be in range [0, number of players - 1], like an array index.
             isRun is a boolean
@@ -173,6 +175,19 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         if (_playerTurn < Math.max(0, _players.length) - 1) _playerTurn++;
         else _playerTurn = 0;
     };
+
+    const getPlayerFromPiece = (piece) => {
+        /* 
+            PARAMETERS: piece: a string representing any piece on the board.
+            RETURNS: an object describing the player
+                player: a reference of the player (!!!)
+                playerNumber: the position where the player was added (example: 2nd player is 2)
+        */
+        let playerIndex = _players.findIndex((player) => player.getPlayerPiece() === piece);
+        let playerNumber = playerIndex + 1;
+        let player = _players[playerIndex];
+        return {player, playerNumber};
+    }
     
     const printPlayerLog = () => {
         console.log(`Current player turn: ${_playerTurn}`);
@@ -289,31 +304,20 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         return {winningPiece, winningX, winningY, direction, piecesToWin};
     };
 
-    const getPlayerFromPiece = (piece) => {
-        /* 
-            PARAMETERS: piece: a string representing any piece on the board.
-            RETURNS: an object describing the player
-                player: a reference of the player (!!!)
-                playerNumber: the position where the player was added (example: 2nd player is 2)
-        */
-        let playerIndex = _players.findIndex((player) => player.getPlayerPiece() === piece);
-        let playerNumber = playerIndex + 1;
-        let player = _players[playerIndex];
-        return {player, playerNumber};
-    }
-    
-
     return {
         addPlayer, 
         resetPlayerTurn, 
         advancePlayerTurn,
+        getPlayerFromPiece,
         printPlayerLog, 
+        
         isGameRunning, 
         toggleRunGame, 
+        
         isBoardFilled, 
         placePieceForCurrentPlayerAt,
         getWinningPattern,
-        getPlayerFromPiece,
+
         checkRepInv
     };
 }) (gameBoard, 3);
@@ -415,12 +419,15 @@ for (move of moves){
     console.log(gameBoard.getBoardAsString());
     winningPattern = gameEngine.getWinningPattern();
     winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
-    if (LOGGING){
-        console.log(winningPattern);
-        if (winner.player) console.log(winner.player.getName(), winner.playerNumber);
-    }
 }
+
+console.log(winningPattern);
+if (winner.player) console.log(winner.player.getName(), winner.playerNumber);
 
 gameBoard.wipeBoard();
 console.log(gameBoard.getBoardAsString());
+
+winningPattern = gameEngine.getWinningPattern();
+winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
+console.log(winningPattern);
 
