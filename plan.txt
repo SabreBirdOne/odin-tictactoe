@@ -4,7 +4,7 @@ gameBoard: stores pieces in the Tic Tac Toe.
     Representation Invariant: 
         board is an Array with correct number of rows and columns
 */
-    _board, _rows, _columns, _debug
+    _board, _rows, _columns
     printBoard, checkRepInv, getDimensions, isInBounds, getPiece, setPiece
 
 player (made from playerFactory): stores data about each player in the game.

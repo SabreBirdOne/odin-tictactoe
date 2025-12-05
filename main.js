@@ -10,7 +10,6 @@ let gameBoard = (function createGameBoard (_rows, _columns) {
     */
 
     let _board = [];
-    const _debug = true;
 
     for (let i = 0; i < _rows; i++){
         _board.push([]);
@@ -40,17 +39,23 @@ let gameBoard = (function createGameBoard (_rows, _columns) {
         if (repInvHeld) console.log("Representation Invariant held");
     };
 
-    const printBoard = () => {
-        // Prints the board to the console
-        for(let i = 0; i < _rows; i++){
-            let rowStr = "";
-            for(let j = 0; j < _columns; j++){
+    const getBoardAsString = () => {
+        // Returns a string of the board
+        let retStr = "\t";
+        for (let j = 0; j < _columns; j++){
+            retStr += j + "\t";
+        }
+        retStr += "\n";
+
+        for (let i = 0; i < _rows; i++){
+            let rowStr = `${i}\t`;
+            for (let j = 0; j < _columns; j++){
                 rowStr += _board[i][j];
-                if (_debug) rowStr += ` (${i},${j})`;
                 rowStr += "\t";
             }
-            console.log(rowStr + "\n");
+            retStr += rowStr + "\n";
         }
+        return retStr;
     };
 
     const getDimensions = () => {
@@ -75,7 +80,7 @@ let gameBoard = (function createGameBoard (_rows, _columns) {
         if (isInBounds(i,j)) _board[i][j] = newPiece.slice(0);
     }
 
-    return {printBoard, getDimensions, isInBounds, getPiece, setPiece, checkRepInv};
+    return {getBoardAsString, getDimensions, isInBounds, getPiece, setPiece, checkRepInv};
 })(3, 3);
 
 let playerFactory = function createPlayer (_piece, _name = "anonymous") {
@@ -130,15 +135,15 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         // Checks if the representation invariant is held, and prints findings to the console.
         let repInvHeld = true;
         if (!(0 <= _playerTurn && _playerTurn <= Math.max(0, _players.length))){
-            console.log(`_playerTurn ${_playerTurn} not an index of players`);
+            console.warn(`_playerTurn ${_playerTurn} not an index of players`);
             repInvHeld = false;
         }
         if (typeof(_isRun) != 'boolean'){
-            console.log(`_isRun ${_isRun} is not a boolean`);
+            console.warn(`_isRun ${_isRun} is not a boolean`);
             repInvHeld = false;
         }
         if (!(_piecesToWin >= 2 && Number.isInteger(_piecesToWin))){
-            console.log(`_piecesToWin ${_piecesToWin} is not positive integer >= 2`);
+            console.warn(`_piecesToWin ${_piecesToWin} is not positive integer >= 2`);
             repInvHeld = false;
         }
 
@@ -304,35 +309,51 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
 
 // TEST SUITE
 
-console.log("\t## Testing gameBoard: getDimensions, getPiece, setPiece")
+
+
 gameBoard.checkRepInv();
-gameBoard.printBoard();
-console.log(gameBoard.getDimensions());
 
-let x = 0, y = 5;
-console.log(`Piece at location ${x}, ${y}: ${gameBoard.getPiece(x,y)}`)
+if (LOGGING) {
+    console.log("\t## Testing gameBoard: getDimensions, getPiece, setPiece");
+    console.log(gameBoard.getBoardAsString());
+    console.log(gameBoard.getDimensions());
+}
 
-x = 0, y = 1;
-console.log(`Piece at location ${x}, ${y}: ${gameBoard.getPiece(x,y)}`)
+let x1 = 0, y1 = 5;
+let x = 0, y = 1;
+
+if (LOGGING){
+    console.log(`Piece at location ${x1}, ${y1}: ${gameBoard.getPiece(x1,y1)}`);
+    console.log(`Piece at location ${x}, ${y}: ${gameBoard.getPiece(x,y)}`);
+}
 
 let newP = "X";
-console.log(`Set new piece ${newP} at ${x}, ${y}`);
+if (LOGGING) console.log(`Set new piece ${newP} at ${x}, ${y}`);
 gameBoard.setPiece(x, y, newP);
 
-console.log(`Piece at location ${x}, ${y}: ${gameBoard.getPiece(x,y)}`)
-gameBoard.printBoard();
+if (LOGGING){
+    console.log(`Piece at location ${x}, ${y}: ${gameBoard.getPiece(x,y)}`);
+    console.log(gameBoard.getBoardAsString());
+}
 
-console.log("\t## Testing playerFactory");
+
+if (LOGGING) console.log("\t## Testing playerFactory");
 let playerX = playerFactory("X");
 let playerO = playerFactory("O", "Omega");
 
 playerX.setName("Xavier");
 playerO.setName("Olivia");
 
-console.log("Testing isRun")
-console.log({isGameRunning: gameEngine.isGameRunning()});
+if (LOGGING){
+    console.log("Testing isRun")
+    console.log({isGameRunning: gameEngine.isGameRunning()});
+}
+
 gameEngine.toggleRunGame();
-console.log({isGameRunning: gameEngine.isGameRunning()});
+
+if (LOGGING) {
+    console.log({isGameRunning: gameEngine.isGameRunning()});
+}
 gameEngine.checkRepInv();
 
 console.log("\t## Adding a player while game is running. Should not be allowed by game engine");
@@ -361,10 +382,10 @@ console.log("isBoardFilled: " + gameEngine.isBoardFilled().toString());
 
 console.log("\n\n\t#######################################\n\t## Test placing pieces with gameEngine");
 
-gameBoard.printBoard();
+gameBoard.getBoardAsString();
 if(!gameEngine.isGameRunning()) gameEngine.toggleRunGame();
 
-moves = [
+let moves = [
     [0,1], // X
     [0,0], // X
     [0,0], // O
@@ -373,14 +394,17 @@ moves = [
     [1,2], // O
     [2,1], // X, wins
 ]
+
+let winningPattern = null, winner = null;
+
 for (move of moves){
     gameEngine.printPlayerLog();
     console.log(`Placing piece for current player at ${move[0]},${move[1]}`);
     gameEngine.placePieceForCurrentPlayerAt(move[0], move[1]);
-    gameBoard.printBoard();
+    console.log(gameBoard.getBoardAsString());
+    winningPattern = gameEngine.getWinningPattern();
+    winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
 }
 
-winningPattern = gameEngine.getWinningPattern();
-winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
 console.log(winningPattern);
 console.log(winner.player.getName(), winner.playerNumber);
