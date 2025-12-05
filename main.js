@@ -205,6 +205,7 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
                 direction: the direction of the winning pattern from winning X and Y.
                     example: "row" means enough of the same pieces in the row direction is on the board
                     directions checked: "row", "column", "diagonal down right", "diagonal down left"
+                _piecesToWin: a copy of _piecesToWin
                 
                 if no winning pattern is found, all properties of the returned object is null.
         */
@@ -213,6 +214,7 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         let winningX = null;
         let winningY = null;
         let direction = null;
+        let piecesToWin = _piecesToWin;
         let {rows, columns} = _board.getDimensions();
         outer: for (let i = 0; i < rows; i++){
             for (let j = 0; j < columns; j++){
@@ -221,7 +223,7 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
                     let pieces_in_column = [];  
                     let pieces_in_backslash = []; // pieces in the \ direction
                     let pieces_in_slash = []; // pieces in the / direction
-                    for (let k = 0; k < _piecesToWin; k++){
+                    for (let k = 0; k < piecesToWin; k++){
                         if (_board.isInBounds(i, j + k)){
                             pieces_in_row.push(_board.getPiece(i, j + k));
                         }
@@ -235,28 +237,28 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
                             pieces_in_slash.push(_board.getPiece(i + k, j - k));
                         }
                     };
-                    if (pieces_in_row.length === _piecesToWin 
+                    if (pieces_in_row.length === piecesToWin 
                         && pieces_in_row.every((element) => element === pieces_in_row[0])){
                         winningPiece = pieces_in_row[0];
                         winningX = i;
                         winningY = j;
                         direction = "row";
                     }
-                    else if (pieces_in_column.length === _piecesToWin 
+                    else if (pieces_in_column.length === piecesToWin 
                         && pieces_in_column.every((element) => element === pieces_in_column[0])){
                         winningPiece = pieces_in_column[0];
                         winningX = i;
                         winningY = j;
                         direction = "column";
                     }
-                    else if (pieces_in_backslash.length === _piecesToWin 
+                    else if (pieces_in_backslash.length === piecesToWin 
                         && pieces_in_backslash.every((element) => element === pieces_in_backslash[0])){
                         winningPiece = pieces_in_backslash[0];
                         winningX = i;
                         winningY = j;
                         direction = "diagonal down right";
                     }
-                    else if (pieces_in_slash.length === _piecesToWin 
+                    else if (pieces_in_slash.length === piecesToWin 
                         && pieces_in_slash.every((element) => element === pieces_in_slash[0])){
                         winningPiece = pieces_in_slash[0];
                         winningX = i;
@@ -267,7 +269,8 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
                 if (winningPiece) break outer;
             }
         }
-        return {winningPiece, winningX, winningY, direction};
+        
+        return {winningPiece, winningX, winningY, direction, piecesToWin};
     };
     
 
