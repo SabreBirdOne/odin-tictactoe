@@ -1,6 +1,6 @@
 // alert("main.js linked");
 
-let LOGGING = false;
+let LOGGING = true;
 
 let gameBoard = (function createGameBoard (_rows, _columns) {
     /* 
@@ -80,7 +80,18 @@ let gameBoard = (function createGameBoard (_rows, _columns) {
         if (isInBounds(i,j)) _board[i][j] = newPiece.slice(0);
     }
 
-    return {getBoardAsString, getDimensions, isInBounds, getPiece, setPiece, checkRepInv};
+    const wipeBoard = () => {
+        _board = [];
+
+        for (let i = 0; i < _rows; i++){
+            _board.push([]);
+            for (let j = 0; j < _columns; j++){
+                _board[i].push("");
+            }  
+        }
+    }
+
+    return {getBoardAsString, getDimensions, isInBounds, getPiece, setPiece, wipeBoard, checkRepInv};
 })(3, 3);
 
 let playerFactory = function createPlayer (_piece, _name = "anonymous") {
@@ -404,7 +415,12 @@ for (move of moves){
     console.log(gameBoard.getBoardAsString());
     winningPattern = gameEngine.getWinningPattern();
     winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
+    if (LOGGING){
+        console.log(winningPattern);
+        if (winner.player) console.log(winner.player.getName(), winner.playerNumber);
+    }
 }
 
-console.log(winningPattern);
-console.log(winner.player.getName(), winner.playerNumber);
+gameBoard.wipeBoard();
+console.log(gameBoard.getBoardAsString());
+

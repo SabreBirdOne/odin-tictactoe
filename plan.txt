@@ -5,7 +5,7 @@ gameBoard: stores pieces in the Tic Tac Toe.
         board is an Array with correct number of rows and columns
 */
     _board, _rows, _columns
-    printBoard, checkRepInv, getDimensions, isInBounds, getPiece, setPiece
+    printBoard, checkRepInv, getDimensions, isInBounds, getPiece, setPiece, wipeBoard
 
 player (made from playerFactory): stores data about each player in the game.
 /* 
