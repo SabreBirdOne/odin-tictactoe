@@ -1,5 +1,7 @@
 // alert("main.js linked");
 
+let LOGGING = false;
+
 let gameBoard = (function createGameBoard (_rows, _columns) {
     /* 
         Abstraction: (rows) by (columns) game board. 
@@ -58,7 +60,7 @@ let gameBoard = (function createGameBoard (_rows, _columns) {
     const isInBounds = (i, j) => {
         // returns true if i and j are indices within rows and columns (start from 0)
         const inBounds = (0 <= i && i < _rows) && (0 <= j && j < _columns);
-        if (!inBounds) console.warn(`${i}, ${j} are not in bounds of dimensions ${_rows} rows x ${_columns} columns`)
+        if (!inBounds && LOGGING) console.warn(`${i}, ${j} are not in bounds of dimensions ${_rows} rows x ${_columns} columns`)
         return inBounds;
     }
 
@@ -189,11 +191,85 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
             If given position (i, j) is an empty cell, place a piece of the current player onto it 
             and advance the turn.
         */
-        if (!_board.getPiece(i, j) && _players.length > 0){
+        if (!_board.getPiece(i, j) && _players.length > 0 && _isRun){
             _board.setPiece(i, j, _players[_playerTurn].getPlayerPiece());
             advancePlayerTurn();
         }
     };
+
+    const getWinningPattern = () => {
+        /* 
+            RETURNS: an object containing a description of the winning pattern:
+                winningPiece: the piece in the pattern
+                winningX and winningY: the initial location on the board where the pattern starts
+                direction: the direction of the winning pattern from winning X and Y.
+                    example: "row" means enough of the same pieces in the row direction is on the board
+                    directions checked: "row", "column", "diagonal down right", "diagonal down left"
+                
+                if no winning pattern is found, all properties of the returned object is null.
+        */
+
+        let winningPiece = null;
+        let winningX = null;
+        let winningY = null;
+        let direction = null;
+        let {rows, columns} = _board.getDimensions();
+        outer: for (let i = 0; i < rows; i++){
+            for (let j = 0; j < columns; j++){
+                if (_board.getPiece(i,j)){
+                    let pieces_in_row = []; 
+                    let pieces_in_column = [];  
+                    let pieces_in_backslash = []; // pieces in the \ direction
+                    let pieces_in_slash = []; // pieces in the / direction
+                    for (let k = 0; k < _piecesToWin; k++){
+                        if (_board.isInBounds(i, j + k)){
+                            pieces_in_row.push(_board.getPiece(i, j + k));
+                        }
+                        if (_board.isInBounds(i + k, j)){
+                            pieces_in_column.push(_board.getPiece(i + k, j));
+                        }
+                        if (_board.isInBounds(i + k, j + k)){
+                            pieces_in_backslash.push(_board.getPiece(i + k, j + k));
+                        }
+                        if (_board.isInBounds(i + k, j - k)){
+                            pieces_in_slash.push(_board.getPiece(i + k, j - k));
+                        }
+                    };
+                    if (pieces_in_row.length === _piecesToWin 
+                        && pieces_in_row.every((element) => element === pieces_in_row[0])){
+                        winningPiece = pieces_in_row[0];
+                        winningX = i;
+                        winningY = j;
+                        direction = "row";
+                    }
+                    else if (pieces_in_column.length === _piecesToWin 
+                        && pieces_in_column.every((element) => element === pieces_in_column[0])){
+                        winningPiece = pieces_in_column[0];
+                        winningX = i;
+                        winningY = j;
+                        direction = "column";
+                    }
+                    else if (pieces_in_backslash.length === _piecesToWin 
+                        && pieces_in_backslash.every((element) => element === pieces_in_backslash[0])){
+                        winningPiece = pieces_in_backslash[0];
+                        winningX = i;
+                        winningY = j;
+                        direction = "diagonal down right";
+                    }
+                    else if (pieces_in_slash.length === _piecesToWin 
+                        && pieces_in_slash.every((element) => element === pieces_in_slash[0])){
+                        winningPiece = pieces_in_slash[0];
+                        winningX = i;
+                        winningY = j;
+                        direction = "diagonal down left";
+                    }
+                }
+                if (winningPiece) break outer;
+            }
+        }
+        return {winningPiece, winningX, winningY, direction};
+    };
+    
 
     return {
         addPlayer, 
@@ -204,6 +280,7 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         toggleRunGame, 
         isBoardFilled, 
         placePieceForCurrentPlayerAt,
+        getWinningPattern,
         checkRepInv
     };
 }) (gameBoard, 3);
@@ -268,6 +345,8 @@ console.log("isBoardFilled: " + gameEngine.isBoardFilled().toString());
 console.log("\n\n\t#######################################\n\t## Test placing pieces with gameEngine");
 
 gameBoard.printBoard();
+if(!gameEngine.isGameRunning()) gameEngine.toggleRunGame();
+
 moves = [
     [0,1], // X
     [0,0], // X
@@ -283,3 +362,5 @@ for (move of moves){
     gameEngine.placePieceForCurrentPlayerAt(move[0], move[1]);
     gameBoard.printBoard();
 }
+
+console.log(gameEngine.getWinningPattern());
