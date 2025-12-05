@@ -56,4 +56,38 @@ gameEngine: runs the Tic Tac Toe game
         isBoardFilled // returns true if the board has no "falsy" cells.
         getWinningPattern // check rows, columns and diagonals of the board for a winning pattern. 
 
-Not all of these functions should be exposed to global scope via the factories. I need to clean them up some time before building the UI.
+displayController: module to control the html and interact with gameEngine.
+    Webpage needs: 
+        
+        div for "player cards". For each player card div: 
+            
+            Shows the player piece and name.
+            The current turn's player card is highlighted via html class list property and CSS.
+            Has a button making displayController change player name.
+        
+        div for a button to restart the game
+            button will make the displayController call gameEngine.resetPlayerTurn and gameBoard.wipeBoard
+
+        the tic tac toe game board 
+            each cell on the board is a button with text content. The button sends x,y to displayController, 
+            which passes on to gameEngine to update the game state.
+
+            Button also calls to update the div of the gameboard itself afterwards to display the 
+            new game state.
+        
+        change name button >  displayController.updatePlayerName > player
+        restart button > displayController.restartGame > gameEngine and gameBoard
+        game board button in each cell > displayController > gameEngine.placePieceForCurrentPlayerAt(button's x,y) 
+
+        
+/* 
+    Abstraction: 
+        body: a query selector referring to the HTML <body> element
+        webpage structure:
+
+        <body>
+
+        </body>
+
+*/  
+

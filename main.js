@@ -322,112 +322,13 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
     };
 }) (gameBoard, 3);
 
-// TEST SUITE
+let displayController = (function createDisplayController (_body){
+    /* 
+    Abstraction: 
+        body: a query selector referring to the HTML <body> element
 
+    */  
+   
 
-
-gameBoard.checkRepInv();
-
-if (LOGGING) {
-    console.log("\t## Testing gameBoard: getDimensions, getPiece, setPiece");
-    console.log(gameBoard.getBoardAsString());
-    console.log(gameBoard.getDimensions());
-}
-
-let x1 = 0, y1 = 5;
-let x = 0, y = 1;
-
-if (LOGGING){
-    console.log(`Piece at location ${x1}, ${y1}: ${gameBoard.getPiece(x1,y1)}`);
-    console.log(`Piece at location ${x}, ${y}: ${gameBoard.getPiece(x,y)}`);
-}
-
-let newP = "X";
-if (LOGGING) console.log(`Set new piece ${newP} at ${x}, ${y}`);
-gameBoard.setPiece(x, y, newP);
-
-if (LOGGING){
-    console.log(`Piece at location ${x}, ${y}: ${gameBoard.getPiece(x,y)}`);
-    console.log(gameBoard.getBoardAsString());
-}
-
-
-if (LOGGING) console.log("\t## Testing playerFactory");
-let playerX = playerFactory("X");
-let playerO = playerFactory("O", "Omega");
-
-playerX.setName("Xavier");
-playerO.setName("Olivia");
-
-if (LOGGING){
-    console.log("Testing isRun")
-    console.log({isGameRunning: gameEngine.isGameRunning()});
-}
-
-gameEngine.toggleRunGame();
-
-if (LOGGING) {
-    console.log({isGameRunning: gameEngine.isGameRunning()});
-}
-gameEngine.checkRepInv();
-
-console.log("\t## Adding a player while game is running. Should not be allowed by game engine");
-gameEngine.addPlayer(playerX);
-gameEngine.printPlayerLog();
-
-console.log("\t## Stop the game from running and add 2 players.")
-gameEngine.toggleRunGame();
-gameEngine.addPlayer(playerX);
-gameEngine.addPlayer(playerO);
-gameEngine.printPlayerLog();
-console.log({isGameRunning: gameEngine.isGameRunning()});
-
-console.log("\t## Player turn test")
-gameEngine.resetPlayerTurn();
-gameEngine.printPlayerLog();
-
-gameEngine.advancePlayerTurn();
-gameEngine.printPlayerLog();
-
-gameEngine.advancePlayerTurn();
-gameEngine.printPlayerLog();
-gameEngine.checkRepInv();
-
-console.log("isBoardFilled: " + gameEngine.isBoardFilled().toString());
-
-console.log("\n\n\t#######################################\n\t## Test placing pieces with gameEngine");
-
-gameBoard.getBoardAsString();
-if(!gameEngine.isGameRunning()) gameEngine.toggleRunGame();
-
-let moves = [
-    [0,1], // X
-    [0,0], // X
-    [0,0], // O
-    [0,2], // O
-    [1,1], // X
-    [1,2], // O
-    [2,1], // X, wins
-]
-
-let winningPattern = null, winner = null;
-
-for (move of moves){
-    gameEngine.printPlayerLog();
-    console.log(`Placing piece for current player at ${move[0]},${move[1]}`);
-    gameEngine.placePieceForCurrentPlayerAt(move[0], move[1]);
-    console.log(gameBoard.getBoardAsString());
-    winningPattern = gameEngine.getWinningPattern();
-    winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
-}
-
-console.log(winningPattern);
-if (winner.player) console.log(winner.player.getName(), winner.playerNumber);
-
-gameBoard.wipeBoard();
-console.log(gameBoard.getBoardAsString());
-
-winningPattern = gameEngine.getWinningPattern();
-winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
-console.log(winningPattern);
+})(document.querySelector("body"));
 
