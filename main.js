@@ -272,6 +272,19 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         
         return {winningPiece, winningX, winningY, direction, piecesToWin};
     };
+
+    const getPlayerFromPiece = (piece) => {
+        /* 
+            PARAMETERS: piece: a string representing any piece on the board.
+            RETURNS: an object describing the player
+                player: a reference of the player (!!!)
+                playerNumber: the position where the player was added (example: 2nd player is 2)
+        */
+        let playerIndex = _players.findIndex((player) => player.getPlayerPiece() === piece);
+        let playerNumber = playerIndex + 1;
+        let player = _players[playerIndex];
+        return {player, playerNumber};
+    }
     
 
     return {
@@ -284,6 +297,7 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         isBoardFilled, 
         placePieceForCurrentPlayerAt,
         getWinningPattern,
+        getPlayerFromPiece,
         checkRepInv
     };
 }) (gameBoard, 3);
@@ -366,4 +380,7 @@ for (move of moves){
     gameBoard.printBoard();
 }
 
-console.log(gameEngine.getWinningPattern());
+winningPattern = gameEngine.getWinningPattern();
+winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
+console.log(winningPattern);
+console.log(winner.player.getName(), winner.playerNumber);
