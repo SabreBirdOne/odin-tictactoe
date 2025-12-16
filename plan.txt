@@ -74,6 +74,8 @@ displayController: module to control the html and interact with gameEngine.
 
             Button also calls to update the div of the gameboard itself afterwards to display the 
             new game state.
+
+        a div to show game results
         
         change name button >  displayController.updatePlayerName > player
         restart button > displayController.restartGame > gameEngine and gameBoard

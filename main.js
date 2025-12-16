@@ -328,6 +328,7 @@ let displayController = (function createDisplayController (_body){
         body: a query selector referring to the HTML <body> element
         _gameBoardDiv: the div element on the webpage displaying the game board
         _boardDimensions: the rows x columns dimensions of the game board
+        _resultsPanel: the div element on the webpage displaying game results
     */  
 
     // Initializing game board
@@ -363,6 +364,15 @@ let displayController = (function createDisplayController (_body){
     }
     
     _body.appendChild(_gameBoardDiv);
+
+    _resultsPanel = document.createElement("div");
+    _resultsPanel.id = "resultsPanel";
+    
+    resultsPanelHeader = document.createElement("h2");
+    resultsPanelHeader.textContent = "Results";
+    _resultsPanel.appendChild(resultsPanelHeader);
+
+    _body.appendChild(_resultsPanel);
 
     const updateGameBoardDiv = function (){
         // Updates the game board div by pulling data from the gameBoard.
