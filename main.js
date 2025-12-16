@@ -209,7 +209,7 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         const boardDims = _board.getDimensions();
         for (let i = 0; i < boardDims.rows; i++) {
             for (let j = 0; j < boardDims.columns; j++) {
-                if (_board.getPiece(i, j)) {
+                if (!_board.getPiece(i, j)) {
                     return false;
                 }
             }
