@@ -329,9 +329,49 @@ let displayController = (function createDisplayController (_body){
 
     */  
 
+    // Initializing game board
+    _boardDimensions = gameBoard.getDimensions();
+    let _gameBoardDiv = document.createElement("div");
+    _gameBoardDiv.id = "gameBoard";
+
+    for (let i = 0; i < _boardDimensions.rows; i++){
+        let boardRow = document.createElement("div");
+        boardRow.classList = "boardRow";
+        boardRow.dataset.row = i;
+
+        for (let j = 0; j < _boardDimensions.columns; j++){
+            let cell = document.createElement("button");
+            cell.classList = "cell";
+            cell.textContent = gameBoard.getPiece(i, j);
+            cell.dataset.row = i;
+            cell.dataset.column = j;
+
+            boardRow.appendChild(cell);
+        }
+
+        _gameBoardDiv.appendChild(boardRow);
+    }
+    
+    _body.appendChild(_gameBoardDiv);
+
+    const updateGameBoardDiv = function (){
+        // Updates the game board div by pulling data from the gameBoard.
+        for (let i = 0; i < _boardDimensions.rows; i++){
+            let boardRow = _gameBoardDiv.querySelector(`.boardRow[data-row="${i}"]`);
+            for (let j = 0; j < _boardDimensions.columns; j++){
+                let cell_ij = boardRow.querySelector(`.cell[data-row="${i}"][data-column="${j}"]`);
+                cell_ij.textContent = gameBoard.getPiece(i, j);
+            }
+        }
+    }
+
+    return {updateGameBoardDiv};
+
 })(document.querySelector("body"));
 
 let playerX = playerFactory("X", "Xavier");
 let playerO = playerFactory("O", "Olivia");
 gameEngine.addPlayer(playerX);
 gameEngine.addPlayer(playerO);
+
+if (!gameEngine.isGameRunning()) gameEngine.toggleRunGame();

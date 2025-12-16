@@ -100,8 +100,8 @@ displayController: module to control the html and interact with gameEngine.
             <button id = "restartButton"></button>
             
             <div id = "gameBoard">
-                <div class = "boardRow">
-                    <button class = "cell"></button>
+                <div class = "boardRow" data-row = "some i">
+                    <button class = "cell" data-row = "some i" data-column = "some j"></button>
                 </div>
             </div>
 
