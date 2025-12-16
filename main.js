@@ -331,6 +331,18 @@ let displayController = (function createDisplayController (_body){
         _resultsPanel: the div element on the webpage displaying game results
     */  
 
+    _restartButton = document.createElement("button");
+    _restartButton.id = "restartButton";
+    _restartButton.textContent = "RESTART";
+
+    _restartButton.addEventListener("click", (event) => {
+        gameBoard.wipeBoard();
+        updateGameBoardDiv();
+        gameEngine.resetPlayerTurn();
+    });
+
+    _body.appendChild(_restartButton);
+
     // Initializing game board
     _boardDimensions = gameBoard.getDimensions();
     let _gameBoardDiv = document.createElement("div");
