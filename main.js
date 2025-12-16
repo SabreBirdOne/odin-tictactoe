@@ -326,7 +326,8 @@ let displayController = (function createDisplayController (_body){
     /* 
     Abstraction: 
         body: a query selector referring to the HTML <body> element
-
+        _gameBoardDiv: the div element on the webpage displaying the game board
+        _boardDimensions: the rows x columns dimensions of the game board
     */  
 
     // Initializing game board
@@ -345,6 +346,15 @@ let displayController = (function createDisplayController (_body){
             cell.textContent = " ";
             cell.dataset.row = i;
             cell.dataset.column = j;
+
+            // Event handling to update game board when each cell button is pressed.
+            cell.addEventListener("click", (event) => {
+                gameEngine.placePieceForCurrentPlayerAt(
+                    cell.dataset.row,
+                    cell.dataset.column
+                );
+                cell.textContent = gameBoard.getPiece(i, j);
+            })
 
             boardRow.appendChild(cell);
         }
@@ -376,25 +386,5 @@ gameEngine.addPlayer(playerO);
 
 if (!gameEngine.isGameRunning()) gameEngine.toggleRunGame();
 
-let moves = [
-    [0,1], 
-    [0,0], 
-    [0,0], 
-    [0,2],
-    [1,1], 
-    [1,2],
-    [2,1],
-]
-
 let winningPattern = null, winner = null;
-
-for (move of moves){
-    gameEngine.printPlayerLog();
-    console.log(`Placing piece for current player at ${move[0]},${move[1]}`);
-    gameEngine.placePieceForCurrentPlayerAt(move[0], move[1]);
-    console.log(gameBoard.getBoardAsString());
-    winningPattern = gameEngine.getWinningPattern();
-    winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
-    displayController.updateGameBoardDiv();
-}
 
