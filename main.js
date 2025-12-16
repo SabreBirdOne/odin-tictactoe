@@ -355,6 +355,9 @@ let displayController = (function createDisplayController (_body){
                     cell.dataset.column
                 );
                 cell.textContent = gameBoard.getPiece(i, j);
+                
+                // Check for win condition
+                addLineToResultsPanel(getResults());
             })
 
             boardRow.appendChild(cell);
@@ -385,7 +388,31 @@ let displayController = (function createDisplayController (_body){
         }
     }
 
-    return {updateGameBoardDiv};
+    const getResults = function () {
+        // Checks the gameEngine and returns a string indicating a win, a tie, or else an empty string.
+        let winningPattern = gameEngine.getWinningPattern();
+        let winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
+
+        if (!winningPattern.winningPiece && gameEngine.isBoardFilled()){
+            return "Tie! The board is filled with no winner";
+        } else if (winningPattern.winningPiece){
+            let returnStr = `Player ${winner.playerNumber}: `
+                            +`${winner.player.getName()} `
+                            +`(${winningPattern.winningPiece}) wins!`;
+            return returnStr;
+        }
+    }
+
+    const addLineToResultsPanel = function (resultStr){
+        // Add a given non-empty string to the results panel
+        if (resultStr){
+            let resultP = document.createElement("p");
+            resultP.textContent = resultStr;
+            _resultsPanel.appendChild(resultP);
+        }    
+    }
+
+    return {updateGameBoardDiv, addLineToResultsPanel};
 
 })(document.querySelector("body"));
 
@@ -395,6 +422,4 @@ gameEngine.addPlayer(playerX);
 gameEngine.addPlayer(playerO);
 
 if (!gameEngine.isGameRunning()) gameEngine.toggleRunGame();
-
-let winningPattern = null, winner = null;
 
