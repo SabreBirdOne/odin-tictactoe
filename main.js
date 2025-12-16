@@ -328,7 +328,10 @@ let displayController = (function createDisplayController (_body){
         body: a query selector referring to the HTML <body> element
 
     */  
-   
 
 })(document.querySelector("body"));
 
+let playerX = playerFactory("X", "Xavier");
+let playerO = playerFactory("O", "Olivia");
+gameEngine.addPlayer(playerX);
+gameEngine.addPlayer(playerO);

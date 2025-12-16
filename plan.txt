@@ -86,7 +86,26 @@ displayController: module to control the html and interact with gameEngine.
         webpage structure:
 
         <body>
+            <div id = "playerPanel"> 
+                <div class = "playerCard currentTurn"> <-- the currentTurn class highlights the player card -->
+                    <p class = "piece"></p>
+                    <p class = "playerName"></p>
+                    <form class = "changePlayerNameForm"> 
+                        <input type="text"></input>
+                        <button>Submit</button> <-- need an interface in gameEngine to change player name -->
+                    </form>
+                </div>
+            </div>
+            
+            <button id = "restartButton"></button>
+            
+            <div id = "gameBoard">
+                <div class = "boardRow">
+                    <button class = "cell"></button>
+                </div>
+            </div>
 
+            <div id = "resultsPanel"></div>
         </body>
 
 */  
