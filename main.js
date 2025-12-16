@@ -342,7 +342,7 @@ let displayController = (function createDisplayController (_body){
         for (let j = 0; j < _boardDimensions.columns; j++){
             let cell = document.createElement("button");
             cell.classList = "cell";
-            cell.textContent = gameBoard.getPiece(i, j);
+            cell.textContent = " ";
             cell.dataset.row = i;
             cell.dataset.column = j;
 
@@ -375,3 +375,26 @@ gameEngine.addPlayer(playerX);
 gameEngine.addPlayer(playerO);
 
 if (!gameEngine.isGameRunning()) gameEngine.toggleRunGame();
+
+let moves = [
+    [0,1], 
+    [0,0], 
+    [0,0], 
+    [0,2],
+    [1,1], 
+    [1,2],
+    [2,1],
+]
+
+let winningPattern = null, winner = null;
+
+for (move of moves){
+    gameEngine.printPlayerLog();
+    console.log(`Placing piece for current player at ${move[0]},${move[1]}`);
+    gameEngine.placePieceForCurrentPlayerAt(move[0], move[1]);
+    console.log(gameBoard.getBoardAsString());
+    winningPattern = gameEngine.getWinningPattern();
+    winner = gameEngine.getPlayerFromPiece(winningPattern.winningPiece);
+    displayController.updateGameBoardDiv();
+}
+

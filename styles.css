@@ -1,0 +1,24 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --board-width: 300px;
+}
+
+#gameBoard {
+    display: flex;
+    flex-direction: column;
+    max-width: var(--board-width); 
+}
+
+#gameBoard .boardRow {
+    flex: calc(var(--board-width) / 3);
+    display: flex;
+}
+
+#gameBoard .boardRow .cell {
+    flex: calc(var(--board-width) / 3);
+    font-size: 5rem;
+}
