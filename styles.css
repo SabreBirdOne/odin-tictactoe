@@ -22,3 +22,7 @@
     flex: calc(var(--board-width) / 3);
     font-size: 5rem;
 }
+
+#playersPanel .playerCard.currentTurn {
+    border: 2px solid green;
+}

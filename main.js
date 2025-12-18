@@ -193,6 +193,11 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         // Returns a reference of _players
         return _players;
     }
+
+    const getCurrentTurn = () => {
+        // Returns the list index of the player who has the current turn
+        return _playerTurn;
+    }
     
     const printPlayerLog = () => {
         console.log(`Current player turn: ${_playerTurn}`);
@@ -315,6 +320,7 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         advancePlayerTurn,
         getPlayerFromPiece,
         getAllPlayersAsReference,
+        getCurrentTurn,
         printPlayerLog, 
         
         isGameRunning, 
@@ -355,15 +361,19 @@ let displayController = (function createDisplayController (_body){
         const player = allPlayers[i];
         let playerCard = document.createElement("div");
         playerCard.classList = "playerCard";
+        playerCard.dataset.index = i;
 
+        // Player Info
         let playerInfo = document.createElement("p");
         playerInfo.textContent = `Player #${i+1}: ${player.getName()}, piece: ${player.getPlayerPiece()}`;
         playerCard.appendChild(playerInfo);
 
-
-
         _playersPanel.appendChild(playerCard);
     }
+
+    // Update the player cards with the current turn
+    currTurnPlayerCard = _playersPanel.querySelector(`div[data-index="${gameEngine.getCurrentTurn()}"]`);
+    currTurnPlayerCard.classList.add("currentTurn");
 
     _body.appendChild(_playersPanel);
     
@@ -376,7 +386,9 @@ let displayController = (function createDisplayController (_body){
         // Restart button clicked 
         gameBoard.wipeBoard();
         updateGameBoardDiv();
+
         gameEngine.resetPlayerTurn();
+        updatePlayerCardCurrentTurn();
 
         while(_resultsPanel.firstChild){
             _resultsPanel.removeChild(_resultsPanel.firstChild);
@@ -413,6 +425,9 @@ let displayController = (function createDisplayController (_body){
                     cell.dataset.column
                 );
                 cell.textContent = gameBoard.getPiece(i, j);
+
+                // Update the player cards with the current turn
+                updatePlayerCardCurrentTurn();
                 
                 // Check for win condition
                 const resultStr = getResults();
@@ -473,6 +488,21 @@ let displayController = (function createDisplayController (_body){
             resultP.textContent = resultStr;
             _resultsPanel.appendChild(resultP);
         }    
+    }
+
+    const updatePlayerCardCurrentTurn = function (){
+        /* 
+            Finds the playerCard with the currentTurn class, remove this class from the card
+            Then pulls the currentTurn from gameEngine, and adds the currentTurn class to 
+            the corresponding playerCard.
+        */
+       let prevTurnPlayerCard = _playersPanel.querySelector("div.currentTurn");
+       if (prevTurnPlayerCard){
+            prevTurnPlayerCard.classList.remove("currentTurn");
+       }
+
+       currTurnPlayerCard = _playersPanel.querySelector(`div[data-index="${gameEngine.getCurrentTurn()}"]`);
+       currTurnPlayerCard.classList.add("currentTurn");
     }
 
     return {};
