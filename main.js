@@ -188,6 +188,11 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         let player = _players[playerIndex];
         return {player, playerNumber};
     }
+
+    const getAllPlayersAsReference = () => {
+        // Returns a reference of _players
+        return _players;
+    }
     
     const printPlayerLog = () => {
         console.log(`Current player turn: ${_playerTurn}`);
@@ -309,6 +314,7 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
         resetPlayerTurn, 
         advancePlayerTurn,
         getPlayerFromPiece,
+        getAllPlayersAsReference,
         printPlayerLog, 
         
         isGameRunning, 
