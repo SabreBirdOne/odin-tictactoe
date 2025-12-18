@@ -8,3 +8,19 @@ suite via NodeJS.
 
 At least no data is exposed directly (if you don't count returns that might not be deep copies). 
 The only thing exposed are functions.
+
+POTENTIAL Refactored Modules
+
+The gameEngine feels bloated with functions dealing with the players of the game. 
+If I refactor this code, maybe I'll wrap those players and their functions into a player manager module. 
+And hook that up to the displayController.
+
+In general, I'm happy with the responsibilities of each module. But I know I can break it down further 
+to make the code more modular. 
+
+When building the gameEngine, I did not really think too much about what the displayController 
+or the DOM needs (as I should be doing). So throughout development I frequently have to add new
+functions to existing modules to gameEngine so that displayController can use them. 
+
+Good thing I did not have to modify gameEngine too much, and that my initial console game design
+withstood new changes for displayController. 
