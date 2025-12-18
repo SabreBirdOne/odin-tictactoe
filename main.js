@@ -365,8 +365,40 @@ let displayController = (function createDisplayController (_body){
 
         // Player Info
         let playerInfo = document.createElement("p");
-        playerInfo.textContent = `Player #${i+1}: ${player.getName()}, piece: ${player.getPlayerPiece()}`;
+        playerInfo.textContent = `Player #${i+1}, piece: ${player.getPlayerPiece()}`;
         playerCard.appendChild(playerInfo);
+
+        // Player name
+        let playerName = document.createElement("p");
+        playerName.classList.add("playerName");
+        playerName.textContent = `Player name: ${player.getName()}`;
+        playerCard.appendChild(playerName);
+        
+        // Form to change player name
+        let nameChangeForm = document.createElement("form");
+        
+        let newNameField = document.createElement("input");
+        newNameField.type = "text";
+        nameChangeForm.appendChild(newNameField);
+        
+        let newNameSubmitButton = document.createElement("button");
+        newNameSubmitButton.textContent = "change name";
+        
+        newNameSubmitButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            let targetPlayerCard = event.target.parentNode.parentNode;
+            
+            let targetPlayer = allPlayers[targetPlayerCard.dataset.index];
+
+            targetPlayer.setName(newNameField.value);
+
+            targetPlayerNameInDOM = targetPlayerCard.querySelector("p.playerName");
+            targetPlayerNameInDOM.textContent = `Player name: ${targetPlayer.getName()}`;
+        });
+
+        nameChangeForm.appendChild(newNameSubmitButton);
+        playerCard.appendChild(nameChangeForm);
+
 
         _playersPanel.appendChild(playerCard);
     }
