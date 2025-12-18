@@ -351,8 +351,18 @@ let displayController = (function createDisplayController (_body){
     _playersPanel.id = "playersPanel";
 
     const allPlayers = gameEngine.getAllPlayersAsReference();
-    for (const player of allPlayers){
-        console.log(player.getName(), player.getPlayerPiece());
+    for (let i = 0; i < allPlayers.length; i++){
+        const player = allPlayers[i];
+        let playerCard = document.createElement("div");
+        playerCard.classList = "playerCard";
+
+        let playerInfo = document.createElement("p");
+        playerInfo.textContent = `Player #${i+1}: ${player.getName()}, piece: ${player.getPlayerPiece()}`;
+        playerCard.appendChild(playerInfo);
+
+
+
+        _playersPanel.appendChild(playerCard);
     }
 
     _body.appendChild(_playersPanel);
