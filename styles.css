@@ -7,6 +7,38 @@
     --board-width: 300px;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+#playersPanel {
+    margin: 1rem 2rem;
+
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+#playersPanel .playerCard {
+    padding: 1rem;
+    background-color: lightgray;
+    border: 3px solid lightgray;
+}
+
+#playersPanel .playerCard.currentTurn {
+    border: 3px solid lightgreen;
+}
+
+#restartButton {
+    padding: 1rem;
+    background-color: pink;
+    border: 1px solid purple;
+    border-radius: 10px;
+}
+
 #gameBoard {
     display: flex;
     flex-direction: column;
@@ -14,15 +46,12 @@
 }
 
 #gameBoard .boardRow {
-    flex: calc(var(--board-width) / 3);
     display: flex;
+    min-height: calc(var(--board-width) / 3);
 }
 
 #gameBoard .boardRow .cell {
-    flex: calc(var(--board-width) / 3);
     font-size: 5rem;
+    min-width: calc(var(--board-width) / 3);
 }
 
-#playersPanel .playerCard.currentTurn {
-    border: 2px solid green;
-}
