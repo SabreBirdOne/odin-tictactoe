@@ -344,6 +344,10 @@ let displayController = (function createDisplayController (_body){
         while(_resultsPanel.firstChild){
             _resultsPanel.removeChild(_resultsPanel.firstChild);
         }
+
+        if (!gameEngine.isGameRunning()){
+            gameEngine.toggleRunGame();
+        }
     });
 
     _body.appendChild(_restartButton);
@@ -374,7 +378,11 @@ let displayController = (function createDisplayController (_body){
                 cell.textContent = gameBoard.getPiece(i, j);
                 
                 // Check for win condition
-                addLineToResultsPanel(getResults());
+                const resultStr = getResults();
+                if (resultStr && gameEngine.isGameRunning()){
+                    addLineToResultsPanel(resultStr);
+                    gameEngine.toggleRunGame()
+                }    
             })
 
             boardRow.appendChild(cell);
