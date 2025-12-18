@@ -328,6 +328,11 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
     };
 }) (gameBoard, 3);
 
+let playerX = playerFactory("X", "Xavier");
+let playerO = playerFactory("O", "Olivia");
+gameEngine.addPlayer(playerX);
+gameEngine.addPlayer(playerO);
+
 let displayController = (function createDisplayController (_body){
     /* 
     Abstraction: 
@@ -344,6 +349,11 @@ let displayController = (function createDisplayController (_body){
     // Players panel containing player cards
     _playersPanel = document.createElement("div");
     _playersPanel.id = "playersPanel";
+
+    const allPlayers = gameEngine.getAllPlayersAsReference();
+    for (const player of allPlayers){
+        console.log(player.getName(), player.getPlayerPiece());
+    }
 
     _body.appendChild(_playersPanel);
     
@@ -458,11 +468,6 @@ let displayController = (function createDisplayController (_body){
     return {};
 
 })(document.querySelector("body"));
-
-let playerX = playerFactory("X", "Xavier");
-let playerO = playerFactory("O", "Olivia");
-gameEngine.addPlayer(playerX);
-gameEngine.addPlayer(playerO);
 
 if (!gameEngine.isGameRunning()) gameEngine.toggleRunGame();
 
