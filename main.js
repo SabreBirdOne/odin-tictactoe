@@ -336,9 +336,14 @@ let displayController = (function createDisplayController (_body){
     _restartButton.textContent = "RESTART";
 
     _restartButton.addEventListener("click", (event) => {
+        // Restart button clicked 
         gameBoard.wipeBoard();
         updateGameBoardDiv();
         gameEngine.resetPlayerTurn();
+
+        while(_resultsPanel.firstChild){
+            _resultsPanel.removeChild(_resultsPanel.firstChild);
+        }
     });
 
     _body.appendChild(_restartButton);
@@ -385,8 +390,8 @@ let displayController = (function createDisplayController (_body){
     
     resultsPanelHeader = document.createElement("h2");
     resultsPanelHeader.textContent = "Results";
-    _resultsPanel.appendChild(resultsPanelHeader);
-
+    
+    _body.appendChild(resultsPanelHeader);
     _body.appendChild(_resultsPanel);
 
     const updateGameBoardDiv = function (){
