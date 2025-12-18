@@ -325,12 +325,23 @@ let gameEngine = (function createGame(_board, _piecesToWin) {
 let displayController = (function createDisplayController (_body){
     /* 
     Abstraction: 
-        body: a query selector referring to the HTML <body> element
-        _gameBoardDiv: the div element on the webpage displaying the game board
+        _body: a query selector referring to the HTML <body> element
+
+        _playersPanel: the div containing player card divs
+        _restartButton: the button to restart the game
+        _gameBoardDiv: the div element on the webpage displaying the game board. Contains buttons that 
+            interact with the gameEngine.
         _boardDimensions: the rows x columns dimensions of the game board
         _resultsPanel: the div element on the webpage displaying game results
     */  
 
+    // Players panel containing player cards
+    _playersPanel = document.createElement("div");
+    _playersPanel.id = "playersPanel";
+
+    _body.appendChild(_playersPanel);
+    
+    // Restart button
     _restartButton = document.createElement("button");
     _restartButton.id = "restartButton";
     _restartButton.textContent = "RESTART";
@@ -369,8 +380,8 @@ let displayController = (function createDisplayController (_body){
             cell.dataset.row = i;
             cell.dataset.column = j;
 
-            // Event handling to update game board when each cell button is pressed.
             cell.addEventListener("click", (event) => {
+                // Event handling to update game board when each cell button is pressed.
                 gameEngine.placePieceForCurrentPlayerAt(
                     cell.dataset.row,
                     cell.dataset.column
@@ -393,6 +404,7 @@ let displayController = (function createDisplayController (_body){
     
     _body.appendChild(_gameBoardDiv);
 
+    // Results panel
     _resultsPanel = document.createElement("div");
     _resultsPanel.id = "resultsPanel";
     
@@ -437,7 +449,7 @@ let displayController = (function createDisplayController (_body){
         }    
     }
 
-    return {updateGameBoardDiv, addLineToResultsPanel};
+    return {};
 
 })(document.querySelector("body"));
 
